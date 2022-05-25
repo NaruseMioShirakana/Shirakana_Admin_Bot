@@ -14,8 +14,12 @@ fun getDigit (Temp : Long) : Long {
 }
 
 fun to114514string (Input : Long) : String{
-    val n = getDigit(Input)
+
+    var n = getDigit(Input)
     var tempStr = "("
+    if(Input < 0){
+        return ""
+    }
     var numStr = Input.toString()
     for (i in n downTo 1L){
         if (i > 11) {
@@ -41,7 +45,12 @@ object To114514Str : SimpleCommand(
 ) {
     @Handler
     suspend fun CommandSender.to114514Str(input : Long) {
-        val msg = to114514string(input)
-        sendMessage("$input=$msg")
+        if (input<0){
+            val msg = to114514string(-input)+" * -1"
+            sendMessage("$input=$msg")
+        }else{
+            val msg = to114514string(input)
+            sendMessage("$input=$msg")
+        }
     }
 }
