@@ -96,9 +96,9 @@ object ShirakanaSelectGroups : CompositeCommand(
             sendMessage("未指定机器人")
             return
         }
+        ShirakanaDataGroupMember.selectedGroupMembers.clear()
         for(group_id in ShirakanaDataGroupMember.selectedGroups){
             val selectedGroup = bot?.getGroup(group_id.toLong())?.members
-            ShirakanaDataGroupMember.selectedGroupMembers.clear()
             if (selectedGroup != null) {
                 for(member in selectedGroup){
                     ShirakanaDataGroupMember.selectedGroupMembers.add(member.id.toString())
@@ -398,24 +398,14 @@ object AddRemTarget : CompositeCommand(
             sendMessage("该群未启用功能")
         }
     }
-}
-
-object ListHelpShirakana : SimpleCommand(
-    ShirakanaAdminBot, "ListHelp",
-    description = "列表相关操作的帮助"
-) {
-    @Handler
-    suspend fun CommandSender.listHelpShirakanaHandle() { // 函数名随意, 但参数需要按顺序放置.
-        sendMessage("列表相关操作的帮助：\n[]括起来的代表可选参数\n<>括起来的代表必填参数\n/Tutu help：查看大清洗相关功能的帮助\n/QuickA [QQ号]快速添加至阻止重复加群列表（但不安全，容易出BUG）\n/QuickD [QQ号]快速删除出阻止重复加群列表（但不安全，容易出BUG）\n/CleanRepeat <QQ群>在启用的所有群聊中（除了指定的QQ群）清理不允许重复加群的群员\n/SelectGroups <add/del> <群号>：添加/删除功能启用的群聊\n/SelectGroups list：查看启用功能的群\n/SelectGroups reload：重载非重复群员统计\n/SelectGroups amount：查看功能启用的群聊中非重复群员个数\n/CleanList <repeat/smallclean/bigclean> <add/del/list> <群号> [QQ号]：重复/小清洗/大清洗保护名单的增加/删除/查看，使用时必须指定一个该ID所在群号（之后再所有启用的群聊中通用），QQ号可以设置多个，需要用空格隔开")
+    @SubCommand
+    @Description("查看指令帮助")
+    suspend fun CommandSender.help() {
+        sendMessage("列表相关操作的帮助：\n[]括起来的代表可选参数\n<>括起来的代表必填参数\n/Tutu help：查看大清洗相关功能的帮助\n/CleanList qa [QQ号]快速添加至阻止重复加群列表（但不安全，容易出BUG）\n/CleanList qd [QQ号]快速删除出阻止重复加群列表（但不安全，容易出BUG）\n/CleanRepeat <QQ群>在启用的所有群聊中（除了指定的QQ群）清理不允许重复加群的群员\n/SelectGroups <add/del> <群号>：添加/删除功能启用的群聊\n/SelectGroups list：查看启用功能的群\n/SelectGroups reload：重载非重复群员统计\n/SelectGroups amount：查看功能启用的群聊中非重复群员个数\n/CleanList <repeat/smallclean/bigclean> <add/del/list> <群号> [QQ号]：重复/小清洗/大清洗保护名单的增加/删除/查看，使用时必须指定一个该ID所在群号（之后再所有启用的群聊中通用），QQ号可以设置多个，需要用空格隔开")
     }
-}
-
-object QuickAddRepeatTarget : SimpleCommand(
-    ShirakanaAdminBot, "QuickA",
-    description = "快速添加"
-) {
-    @Handler
-    suspend fun CommandSender.quickAddRepeatTargetH(vararg GroupMembersTarget: String) {
+    @SubCommand
+    @Description("快速添加名单")
+    suspend fun CommandSender.qa(vararg GroupMembersTarget: String) {
         var msgThisA = ""
         for(target in GroupMembersTarget){
             if (ShirakanaDataGroupMember.selectedGroupMembers.contains(target)) {
@@ -426,14 +416,9 @@ object QuickAddRepeatTarget : SimpleCommand(
         }
         sendMessage("加入的QQ号：$msgThisA")
     }
-}
-
-object QuickDelRepeatTarget : SimpleCommand(
-    ShirakanaAdminBot, "QuickD",
-    description = "列表相关操作的帮助"
-) {
-    @Handler
-    suspend fun CommandSender.quickDelRepeatTargetH(vararg GroupMembersTarget: String) {
+    @SubCommand
+    @Description("快速减少名单")
+    suspend fun CommandSender.qd(vararg GroupMembersTarget: String) {
         var msgThisA = ""
         for(target in GroupMembersTarget){
             if (ShirakanaDataGroupMember.selectedGroupMembers.contains(target)) {
