@@ -1,14 +1,14 @@
 package org.fujiwara.shirakana.adminbot
 
-import net.mamoe.mirai.console.plugin.jvm.*
-import net.mamoe.mirai.utils.*
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.register
 import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregister
-import net.mamoe.mirai.console.command.CommandManager.INSTANCE.unregisterAll
+import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
-import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.utils.*
 import org.fujiwara.shirakana.adminbot.command.*
 import org.fujiwara.shirakana.adminbot.configAndData.*
+
+
 
 
 object ShirakanaAdminBot : KotlinPlugin(
@@ -24,31 +24,30 @@ object ShirakanaAdminBot : KotlinPlugin(
     override fun onEnable() {
         ShirakanaBigCleanSetting.reload()
         ShirakanaDataGroupMember.reload()
+        ShirakanaAdministratorList.reload()
+        ShirakanaDataFlags.reload()
+        ShirakanaEventListener.registerTo(globalEventChannel())
+        //Bot.instances
+        ShirakanaParanoia.register()
         AddRemTarget.register()
         ShirakanaSelectGroups.register()
-        ListHelpShirakana.register()
-        ShirakanaEventListener.registerTo(globalEventChannel())
-        QuickDelRepeatTarget.register()
-        QuickAddRepeatTarget.register()
-        //ShirakanaParanoia.register()
         ShirakanaXianZhongRen.register()
-        BigCleaNNNNNNNNNNN.register()
         QuickCleanRepeatTarget.register()
         To114514Str.register()
+        //ListBigCleanTargets.register()
+
         logger.info { "Plugin “大清洗” loaded" }
     }
 
     override fun onDisable() {
+
         AddRemTarget.unregister()
         ShirakanaSelectGroups.unregister()
-        ListHelpShirakana.unregister()
-        QuickDelRepeatTarget.unregister()
-        QuickAddRepeatTarget.unregister()
-        //ShirakanaParanoia.unregister()
+        ShirakanaParanoia.unregister()
         ShirakanaXianZhongRen.unregister()
-        BigCleaNNNNNNNNNNN.unregister()
         QuickCleanRepeatTarget.register()
         To114514Str.unregister()
+        //ListBigCleanTargets.unregister()
 
     }
 
